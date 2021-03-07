@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+    db:
+        image: postgres:13.2
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: pass_demo
+            POSTGRES_DB: db_demo
+        container_name: db-postgres
+
+    db-test:
+        image: postgres:13.2
+        restart: always
+        environment:
+          POSTGRES_PASSWORD: pass_demo_test
+          POSTGRES_DB: db_demo_test
+        ports:
+          - 5439:5432
