@@ -1,2 +1,2 @@
-// Package in define all model input for service
+// Package in define input model for handle of service
 package in

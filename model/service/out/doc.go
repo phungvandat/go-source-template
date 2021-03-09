@@ -1,2 +1,2 @@
-// Package out define all model input for service
+// Package out define output model for handle of service
 package out

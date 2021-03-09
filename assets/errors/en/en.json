@@ -1,0 +1,17 @@
+{
+    "1": {
+        "message": "Data content not allowed"
+    },
+    "404": {
+        "message": "Not found"
+    },
+    "405": {
+        "message": "Method not allowed"
+    },
+    "500": {
+        "message": "Something went wrong"
+    },
+    "403": {
+        "message": "Permission denied"
+    }
+}

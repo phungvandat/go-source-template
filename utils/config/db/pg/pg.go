@@ -19,10 +19,10 @@ const (
 	maxConnMaxLifetime = time.Minute * 5
 )
 
-// InitDBConnection new database connection
-func InitDBConnection(connStr string) {
-	var err error
+// InitPGConnection new database connection
+func InitPGConnection(connStr string) {
 	once.Do(func() {
+		var err error
 		gormDB, err = gorm.Open(postgres.Open(connStr), nil)
 		if err != nil {
 			panic(err)
@@ -42,7 +42,7 @@ func InitDBConnection(connStr string) {
 // GetDB return a db connection
 func GetDB() *gorm.DB {
 	if gormDB == nil {
-		panic("missed InitDBConnection")
+		panic("missed InitPGConnection")
 	}
 	return gormDB
 }

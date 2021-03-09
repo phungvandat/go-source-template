@@ -30,14 +30,14 @@ func (et *errTrace) Trace(err error) error {
 	var (
 		bufNum   = 5
 		traceMsg = getStackTrace(bufNum)
-		tErr, ok = err.(CustomErr)
+		tErr, ok = err.(CustomErrorer)
 	)
 
 	if !ok {
-		tErr = NewCustomErr(err.Error(), http.StatusInternalServerError)
+		tErr = NewCustomErrByMsg(err.Error(), Option{HTTPStatusCode: http.StatusInternalServerError})
 	}
 
-	if !tErr.isTraced {
+	if !tErr.IsTraced() {
 		go func(err error) {
 			if et.errChn == nil {
 				return
@@ -47,7 +47,7 @@ func (et *errTrace) Trace(err error) error {
 		}(tErr)
 	}
 
-	tErr.isTraced = true
+	tErr.SetTraced(true)
 	return tErr
 }
 
