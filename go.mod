@@ -3,6 +3,7 @@ module github.com/phungvandat/source-template
 go 1.16
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/cors v1.1.1
 	github.com/go-kit/kit v0.10.0
