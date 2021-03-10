@@ -1,4 +1,13 @@
 {
+    "4": {
+        "message": "ID is invalid"
+    },
+    "3": {
+        "message": "Token is invalid"
+    },
+    "2": {
+        "message": "Unexpected token signing method"
+    },
     "1": {
         "message": "Data content not allowed"
     },

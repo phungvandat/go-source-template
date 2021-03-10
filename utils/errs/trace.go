@@ -11,6 +11,7 @@ type ErrTracer interface {
 	Trace(err error) error
 	GotErr() <-chan error
 	Close()
+	private()
 }
 
 type errTrace struct {
@@ -24,6 +25,10 @@ func NewErrTracer(maxChan int) ErrTracer {
 	return &errTrace{
 		errChn: errChn,
 	}
+}
+
+func (et *errTrace) private() {
+	// Anti tampering
 }
 
 func (et *errTrace) Trace(err error) error {

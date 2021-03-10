@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	kithttp "github.com/go-kit/kit/transport/http"
-	"github.com/phungvandat/source-template/utils/contextkey"
+	"github.com/phungvandat/source-template/utils/ctxkey"
 	"github.com/phungvandat/source-template/utils/errs"
 )
 
@@ -41,7 +41,7 @@ func encodeJSONError(ctx context.Context, err error, w http.ResponseWriter) {
 		if cErr.HTTPStatusCode() > 0 {
 			httpCode = cErr.HTTPStatusCode()
 		}
-		lang := contextkey.GetLang(ctx)
+		lang := ctxkey.GetStrValue(ctx)
 		errMessage = cErr.GetMessageByLang(errs.ErrLang(lang))
 	}
 

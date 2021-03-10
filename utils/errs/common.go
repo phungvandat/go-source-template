@@ -11,4 +11,5 @@ var (
 	ErrNotFound           = NewCustomErrByCode(http.StatusNotFound)
 	ErrBodyNotAllowed     = NewCustomErrByCode(1)
 	ErrPermissionDenied   = NewCustomErrByCode(http.StatusForbidden)
+	ErrIDIsInvalid        = NewCustomErrByCode(4)
 )
