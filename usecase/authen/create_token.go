@@ -3,6 +3,7 @@ package authen
 import (
 	"time"
 
+	"github.com/phungvandat/source-template/model/domain"
 	"github.com/phungvandat/source-template/utils/jwtutil"
 	uuid "github.com/satori/go.uuid"
 )
@@ -12,14 +13,22 @@ const (
 	sessionIDKey = "session_id"
 )
 
-func (uc *authen) CreateToken(userID string) (string, string, error) {
+type createTokenRes struct {
+	AccessToken      string
+	RefreshToken     string
+	AccessSessionID  string
+	RefreshSessionID string
+}
+
+func (uc *authen) CreateToken(userID domain.ID) (*createTokenRes, error) {
 	var (
+		userIDStr = userID.String()
 		// Access token
 		atExp       = time.Hour * 12
 		atSessionID = uuid.NewV4().String()
 		atGenData   = jwtutil.TokenInfo{
 			MapClaimsData: map[string]interface{}{
-				userIDKey:    userID,
+				userIDKey:    userIDStr,
 				sessionIDKey: atSessionID,
 			},
 			Secret:      uc.jwtSecret,
@@ -30,7 +39,7 @@ func (uc *authen) CreateToken(userID string) (string, string, error) {
 		rfSessionID = uuid.NewV4().String()
 		rfGenData   = jwtutil.TokenInfo{
 			MapClaimsData: map[string]interface{}{
-				userIDKey:    userID,
+				userIDKey:    userIDStr,
 				sessionIDKey: rfSessionID,
 			},
 			Secret:      uc.jwtSecret,
@@ -40,13 +49,18 @@ func (uc *authen) CreateToken(userID string) (string, string, error) {
 
 	accessToken, err := jwtutil.CreateToken(atGenData)
 	if err != nil {
-		return "", "", uc.eTracer.Trace(err)
+		return nil, uc.eTracer.Trace(err)
 	}
 
 	refreshToken, err := jwtutil.CreateToken(rfGenData)
 	if err != nil {
-		return "", "", uc.eTracer.Trace(err)
+		return nil, uc.eTracer.Trace(err)
 	}
 
-	return accessToken, refreshToken, nil
+	return &createTokenRes{
+		AccessToken:      accessToken,
+		RefreshToken:     refreshToken,
+		AccessSessionID:  atSessionID,
+		RefreshSessionID: rfSessionID,
+	}, nil
 }

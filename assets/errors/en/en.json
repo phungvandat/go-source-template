@@ -1,4 +1,10 @@
 {
+    "6": {
+        "message": "Username is required"
+    },
+    "5": {
+        "message": "User not found"
+    },
     "4": {
         "message": "ID is invalid"
     },

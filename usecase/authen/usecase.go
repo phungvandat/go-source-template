@@ -2,13 +2,15 @@ package authen
 
 import (
 	"github.com/go-redis/redis/v8"
+	"github.com/phungvandat/source-template/model/domain"
 	dbRedis "github.com/phungvandat/source-template/utils/config/db/redis"
 	"github.com/phungvandat/source-template/utils/errs"
 )
 
 // UseCase interface
 type UseCase interface {
-	CreateToken(userID string) (accessToken, refreshToken string, err error)
+	CreateToken(userID domain.ID) (*createTokenRes, error)
+	private()
 }
 
 type authen struct {
@@ -24,4 +26,8 @@ func NewAuthenUseCase(jwtSecret string, eTracer errs.ErrTracer) UseCase {
 		jwtSecret: []byte(jwtSecret),
 		eTracer:   eTracer,
 	}
+}
+
+func (authen) private() {
+	// Anti-tampering
 }
