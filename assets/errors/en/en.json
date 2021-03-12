@@ -1,4 +1,7 @@
 {
+    "8": {
+        "message": "Route not found"
+    },
     "7": {
         "message": "Invalid type to decode JSON"
     },

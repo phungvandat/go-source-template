@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/go-kit/kit/endpoint"
+	"github.com/phungvandat/source-template/pkg/endpoint"
 	"github.com/phungvandat/source-template/service"
 )
 

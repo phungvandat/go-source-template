@@ -7,12 +7,15 @@ import (
 	"github.com/phungvandat/source-template/model/domain"
 	iom "github.com/phungvandat/source-template/model/service/user"
 	"github.com/phungvandat/source-template/utils/errs"
+	"github.com/phungvandat/source-template/utils/helper"
 	"gorm.io/gorm"
 
 	"github.com/phungvandat/source-template/utils/redisutil"
 )
 
 func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error) {
+	helper.PrintJSON(in)
+	return nil, nil
 	var (
 		username = in.Username
 		user     = &domain.User{}

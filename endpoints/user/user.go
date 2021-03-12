@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"github.com/go-kit/kit/endpoint"
 	iom "github.com/phungvandat/source-template/model/service/user"
+	"github.com/phungvandat/source-template/pkg/endpoint"
 	"github.com/phungvandat/source-template/service/user"
 	"github.com/phungvandat/source-template/utils/errs"
 )

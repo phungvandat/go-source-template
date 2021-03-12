@@ -24,3 +24,13 @@ func Info(format string, args ...interface{}) {
 func Error(format string, args ...interface{}) {
 	log.Errorf(format, args...)
 }
+
+// Warning logs a message at level Warning on the standard logger.
+func Warning(format string, args ...interface{}) {
+	log.Warnf(format, args...)
+}
+
+// Panic logs a message at level Panic on the standard logger.
+func Panic(format string, args ...interface{}) {
+	log.Panicf(format, args...)
+}

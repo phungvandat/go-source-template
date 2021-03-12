@@ -1,34 +1,77 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
+	"runtime/debug"
+	"time"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/cors"
-	"github.com/phungvandat/source-template/endpoints"
+	fwk "github.com/phungvandat/source-template/pkg/framework/http"
+	"github.com/phungvandat/source-template/transports/http/mws"
+	"github.com/phungvandat/source-template/utils/errs"
+	"github.com/phungvandat/source-template/utils/logger"
 )
 
-// NewHTTPHandler func create http handler
-func NewHTTPHandler(endpoints endpoints.Endpoints) http.Handler {
+type httpHandler struct {
+	mapRouteHandle map[string]fwk.HandleFunc
+}
+
+func NewHTTPHandler(mrh map[string]fwk.HandleFunc) http.Handler {
+	return &httpHandler{
+		mapRouteHandle: mrh,
+	}
+}
+
+func (h httpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Panic Recovery
+	defer func() {
+		if r := recover(); r != nil {
+			msg := fmt.Sprintf("%v\n%v", r, string(debug.Stack()))
+			logger.Panic(msg)
+		}
+	}()
+
+	// TODO: add cors when run in production
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Language")
+
 	var (
-		r       = chi.NewRouter()
-		origins = []string{"*"}
-		headers = []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Language"}
+		startTime = time.Now()
+		errMsg    = new(string)
 	)
 
-	r.Route("/api", func(r chi.Router) {
-		r.Route("/internal", func(r chi.Router) {
-			corsV1 := cors.New(cors.Options{
-				AllowedOrigins:   origins,
-				AllowedMethods:   []string{http.MethodPost, http.MethodOptions},
-				AllowedHeaders:   headers,
-				AllowCredentials: true,
-			})
-			r.Use(corsV1.Handler)
-			r.Route("/v1", func(r chi.Router) {
+	defer mws.RequestInfo(r, startTime, errMsg)
+	defer func() {
+		err := r.Body.Close()
+		if err != nil {
+			*errMsg = err.Error()
+		}
+	}()
 
-			})
-		})
-	})
-	return r
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		*errMsg = errs.ErrBodyNotAllowed.Error()
+		return
+	}
+
+	var (
+		urlPath    = r.URL.Path
+		handle, ok = h.mapRouteHandle[urlPath]
+	)
+
+	if !ok {
+		*errMsg = errs.ErrRouteNotFound.Error()
+		return
+	}
+
+	var err = handle(w, r)
+	if err != nil {
+		*errMsg = err.Error()
+	}
 }

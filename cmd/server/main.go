@@ -2,15 +2,19 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/phungvandat/source-template/endpoints"
 	"github.com/phungvandat/source-template/utils/config/env"
 	"github.com/phungvandat/source-template/utils/errs"
 	"github.com/phungvandat/source-template/utils/logger"
+
+	httpTransport "github.com/phungvandat/source-template/transports/http"
 )
 
 func main() {
@@ -37,17 +41,29 @@ func main() {
 	}
 
 	var (
+		httpAddr  = ":4000"
 		maxErrChn = 100
-		tErr      = errs.NewErrTracer(maxErrChn)
+		eTracer   = errs.NewErrTracer(maxErrChn)
 		errChn    = make(chan error)
+		svc       = initService(eTracer)
+		eps       = endpoints.MakeServerEndpoints(svc)
 	)
-	defer tErr.Close()
+	defer eTracer.Close()
+
+	// Http handle
+	var (
+		httpHandler = httpTransport.NewHTTPHandler(httpTransport.BuildRouter(eps).Build())
+	)
+	go func() {
+		logger.Info("transport:%v addr:%v", "HTTP", httpAddr)
+		errChn <- http.ListenAndServe(httpAddr, httpHandler)
+	}()
 
 	// Handle function error
 	go func() {
 		for {
 			select {
-			case err := <-tErr.GotErr():
+			case err := <-eTracer.GotErr():
 				logger.Error(err.Error())
 			}
 		}
