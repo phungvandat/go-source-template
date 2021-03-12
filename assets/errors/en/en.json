@@ -1,4 +1,7 @@
 {
+    "7": {
+        "message": "Invalid type to decode JSON"
+    },
     "6": {
         "message": "Username is required"
     },

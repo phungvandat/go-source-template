@@ -6,10 +6,11 @@ import (
 
 // Common errors
 var (
-	ErrMethodNotAllowed   = NewCustomErrByCode(http.StatusMethodNotAllowed)
-	ErrSomethingWentWrong = NewCustomErrByCode(http.StatusInternalServerError)
-	ErrNotFound           = NewCustomErrByCode(http.StatusNotFound)
-	ErrBodyNotAllowed     = NewCustomErrByCode(1)
-	ErrPermissionDenied   = NewCustomErrByCode(http.StatusForbidden)
-	ErrIDIsInvalid        = NewCustomErrByCode(4)
+	ErrMethodNotAllowed        = NewCustomErrByCode(http.StatusMethodNotAllowed)
+	ErrSomethingWentWrong      = NewCustomErrByCode(http.StatusInternalServerError)
+	ErrNotFound                = NewCustomErrByCode(http.StatusNotFound)
+	ErrBodyNotAllowed          = NewCustomErrByCode(1)
+	ErrPermissionDenied        = NewCustomErrByCode(http.StatusForbidden)
+	ErrIDIsInvalid             = NewCustomErrByCode(4)
+	ErrInvalidTypeToDecodeJSON = NewCustomErrByCode(7)
 )

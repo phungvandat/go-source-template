@@ -13,8 +13,9 @@ func NewHTTPHandler(endpoints endpoints.Endpoints) http.Handler {
 	var (
 		r       = chi.NewRouter()
 		origins = []string{"*"}
-		headers = []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Accept-Language"}
+		headers = []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Language"}
 	)
+
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/internal", func(r chi.Router) {
 			corsV1 := cors.New(cors.Options{
