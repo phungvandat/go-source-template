@@ -4,18 +4,18 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/phungvandat/source-template/utils/helper"
 	"github.com/phungvandat/source-template/utils/logger"
-	"github.com/phungvandat/source-template/utils/timeutil"
 )
 
 func RequestInfo(r *http.Request, startTime time.Time, errMsg *string) {
 	template := "Method: %v, Route: %v, Time: %v Duration: %v ms"
-	endMillis := timeutil.GetNowMillis()
+	endMillis := helper.GetNowMillis()
 	args := []interface{}{
 		r.Method,
 		r.RequestURI,
 		startTime.Format("2006/01/02-15:04:05"),
-		endMillis - timeutil.TimeToMillis(startTime),
+		endMillis - helper.TimeToMillis(startTime),
 	}
 
 	if errMsg != nil && *errMsg != "" {

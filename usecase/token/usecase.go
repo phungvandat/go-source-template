@@ -1,10 +1,8 @@
-package authen
+package token
 
 import (
-	"github.com/go-redis/redis/v8"
 	"github.com/phungvandat/source-template/model/domain"
 	"github.com/phungvandat/source-template/pkg/errpkg"
-	dbRedis "github.com/phungvandat/source-template/utils/config/db/redis"
 )
 
 // UseCase interface
@@ -13,21 +11,19 @@ type UseCase interface {
 	private()
 }
 
-type authen struct {
-	rClient   *redis.Client
+type token struct {
 	jwtSecret []byte
 	eTracer   errpkg.ErrTracer
 }
 
-// NewAuthenUseCase constructor of authen
-func NewAuthenUseCase(jwtSecret string, eTracer errpkg.ErrTracer) UseCase {
-	return &authen{
-		rClient:   dbRedis.GetDB(),
+// NewTokenUseCase constructor of token
+func NewTokenUseCase(jwtSecret string, eTracer errpkg.ErrTracer) UseCase {
+	return &token{
 		jwtSecret: []byte(jwtSecret),
 		eTracer:   eTracer,
 	}
 }
 
-func (authen) private() {
+func (token) private() {
 	// Anti-tampering
 }

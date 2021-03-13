@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"runtime"
+
+	"github.com/phungvandat/source-template/utils/helper"
 )
 
 // ErrTracer to trace error and centralize error
@@ -51,13 +53,13 @@ func (et *errTrace) Trace(err error) error {
 	}
 
 	if !tErr.IsTraced() {
-		go func(err error) {
+		go helper.Goroutine(func(err error) {
 			if et.errChn == nil {
 				return
 			}
 			nErr := fmt.Errorf("%v \nTrace: %v", err.Error(), traceMsg)
 			et.errChn <- nErr
-		}(tErr)
+		}, tErr)
 	}
 
 	tErr.SetTraced(true)

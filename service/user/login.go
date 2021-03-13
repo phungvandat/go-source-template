@@ -28,7 +28,7 @@ func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, 
 	}
 
 	// TODO: compare with password
-	ctRes, err := s.uc.Authen.CreateToken(user.ID)
+	ctRes, err := s.uc.Token.CreateToken(user.ID)
 	if err != nil {
 		return nil, s.eTracer.Trace(err)
 	}

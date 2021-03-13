@@ -6,7 +6,7 @@ import "github.com/phungvandat/source-template/utils/ctxkey"
 type User struct {
 	Base
 	Name     string `json:"name"`
-	Username string `json:"user_name"`
+	Username string `json:"username"`
 	Password string `json:"-"`
 }
 

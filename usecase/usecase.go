@@ -1,8 +1,8 @@
 package usecase
 
-import "github.com/phungvandat/source-template/usecase/authen"
+import "github.com/phungvandat/source-template/usecase/token"
 
 // Usecase holds all usecase
 type Usecase struct {
-	Authen authen.UseCase
+	Token token.UseCase
 }

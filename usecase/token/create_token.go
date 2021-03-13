@@ -1,4 +1,4 @@
-package authen
+package token
 
 import (
 	"time"
@@ -20,7 +20,7 @@ type createTokenRes struct {
 	RefreshSessionID string
 }
 
-func (uc *authen) CreateToken(userID domain.ID) (*createTokenRes, error) {
+func (uc *token) CreateToken(userID domain.ID) (*createTokenRes, error) {
 	var (
 		userIDStr = userID.String()
 		// Access token

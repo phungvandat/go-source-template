@@ -9,9 +9,12 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/phungvandat/source-template/config/db/pg"
+	"github.com/phungvandat/source-template/config/db/redis"
+	"github.com/phungvandat/source-template/config/env"
 	"github.com/phungvandat/source-template/endpoints"
 	"github.com/phungvandat/source-template/pkg/errpkg"
-	"github.com/phungvandat/source-template/utils/config/env"
+	"github.com/phungvandat/source-template/utils/helper"
 	"github.com/phungvandat/source-template/utils/logger"
 
 	httpTransport "github.com/phungvandat/source-template/transports/http"
@@ -40,41 +43,46 @@ func main() {
 		time.Local = local
 	}
 
+	// Init pg, redis connection
+	pg.InitPGConn(env.PGSource())
+	defer pg.Close()
+	redis.InitRedisConn(env.RedisSource())
+	defer redis.Close()
+
 	var (
-		httpPort  = "4000"
-		httpAddr  = fmt.Sprintf(":%v", httpPort)
+		httpPort  = env.HTTPPort()
 		maxErrChn = 100
 		eTracer   = errpkg.NewErrTracer(maxErrChn)
 		errChn    = make(chan error)
-		svc       = initService(eTracer)
-		eps       = endpoints.MakeServerEndpoints(svc)
+		eps       = endpoints.MakeServerEndpoints(initService(eTracer))
 	)
 	defer eTracer.Close()
 
 	// Http handle
-	var (
-		httpHandler = httpTransport.NewHTTPHandler(httpTransport.BuildRouter(eps).Build())
-	)
-	go func() {
+	httpHandler := httpTransport.NewHTTPHandler(httpTransport.BuildRouter(eps).Build())
+	go helper.Goroutine(func() {
 		logger.Info("transport:%v addr:%v", "HTTP", httpPort)
-		errChn <- http.ListenAndServe(httpAddr, httpHandler)
-	}()
+		errChn <- http.ListenAndServe(fmt.Sprintf(":%v", httpPort), httpHandler)
+	})
 
 	// Handle function error
-	go func() {
+	go helper.Goroutine(func() {
 		for {
 			select {
 			case err := <-eTracer.GotErr():
+				if err == nil {
+					continue
+				}
 				logger.Error(err.Error())
 			}
 		}
-	}()
+	})
 
-	go func() {
+	go helper.Goroutine(func() {
 		ch := make(chan os.Signal)
 		signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 		errChn <- fmt.Errorf("%s", <-ch)
-	}()
+	})
 
 	logger.Error("exit: %v", <-errChn)
 }

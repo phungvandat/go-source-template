@@ -6,7 +6,8 @@ import (
 	"sync"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/phungvandat/source-template/utils/stringutil"
+	"github.com/phungvandat/source-template/utils/helper"
+	"github.com/phungvandat/source-template/utils/logger"
 )
 
 var (
@@ -18,9 +19,9 @@ var (
 func InitRedisConn(connStr string) {
 	once.Do(func() {
 		var (
-			addr    = stringutil.GetStringInBetween(connStr, "addr=", " ")
-			pass    = stringutil.GetStringInBetween(connStr, "pass=", " ")
-			dbStr   = stringutil.GetStringInBetween(connStr, "db=", " ")
+			addr    = helper.GetStringInBetween(connStr, "addr=", " ")
+			pass    = helper.GetStringInBetween(connStr, "pass=", " ")
+			dbStr   = helper.GetStringInBetween(connStr, "db=", " ")
 			db, err = strconv.Atoi(dbStr)
 		)
 		if err != nil {
@@ -35,6 +36,7 @@ func InitRedisConn(connStr string) {
 		if _, err := redisDB.Ping(context.Background()).Result(); err != nil {
 			panic(err)
 		}
+		logger.Info("redis db connected")
 	})
 }
 
@@ -44,4 +46,17 @@ func GetDB() *redis.Client {
 		panic("missed InitRedisConn")
 	}
 	return redisDB
+}
+
+func Close() {
+	if redisDB == nil {
+		panic("missed InitRedisConn")
+	}
+
+	err := redisDB.Close()
+	if err != nil {
+		logger.Error("failed close redis connection by error: %v", err)
+	}
+
+	logger.Info("redis db closed")
 }
