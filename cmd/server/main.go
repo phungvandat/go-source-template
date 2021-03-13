@@ -10,8 +10,8 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/phungvandat/source-template/endpoints"
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/utils/config/env"
-	"github.com/phungvandat/source-template/utils/errs"
 	"github.com/phungvandat/source-template/utils/logger"
 
 	httpTransport "github.com/phungvandat/source-template/transports/http"
@@ -41,7 +41,8 @@ func main() {
 	}
 
 	var (
-		httpAddr  = ":4000"
+		httpPort  = "4000"
+		httpAddr  = fmt.Sprintf(":%v", httpPort)
 		maxErrChn = 100
 		eTracer   = errs.NewErrTracer(maxErrChn)
 		errChn    = make(chan error)
@@ -55,7 +56,7 @@ func main() {
 		httpHandler = httpTransport.NewHTTPHandler(httpTransport.BuildRouter(eps).Build())
 	)
 	go func() {
-		logger.Info("transport:%v addr:%v", "HTTP", httpAddr)
+		logger.Info("transport:%v addr:%v", "HTTP", httpPort)
 		errChn <- http.ListenAndServe(httpAddr, httpHandler)
 	}()
 

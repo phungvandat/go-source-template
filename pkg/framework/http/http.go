@@ -18,14 +18,18 @@ func NewHandle(
 	return func(w http.ResponseWriter, r *http.Request) error {
 		in, err := decode(ctx, r)
 		if err != nil {
+			encode(ctx, w, nil, err)
 			return err
 		}
 
 		out, err := endpointHandler(ctx, in)
 		if err != nil {
+			encode(ctx, w, nil, err)
 			return err
 		}
 
-		return encode(ctx, w, out, err)
+		encode(ctx, w, out, err)
+
+		return nil
 	}
 }

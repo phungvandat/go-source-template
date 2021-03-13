@@ -6,9 +6,9 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/phungvandat/source-template/pkg/errs"
 	fwk "github.com/phungvandat/source-template/pkg/framework/http"
 	"github.com/phungvandat/source-template/transports/http/mws"
-	"github.com/phungvandat/source-template/utils/errs"
 	"github.com/phungvandat/source-template/utils/logger"
 )
 
@@ -67,6 +67,7 @@ func (h httpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if !ok {
 		*errMsg = errs.ErrRouteNotFound.Error()
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 

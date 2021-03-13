@@ -2,10 +2,11 @@ package httputil
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"reflect"
 
-	"github.com/phungvandat/source-template/utils/errs"
+	"github.com/phungvandat/source-template/pkg/errs"
 )
 
 func DecodeJSON(r *http.Request, out interface{}) (interface{}, error) {
@@ -14,6 +15,9 @@ func DecodeJSON(r *http.Request, out interface{}) (interface{}, error) {
 	}
 
 	err := json.NewDecoder(r.Body).Decode(out)
+	if err != io.EOF {
+		return out, nil
+	}
 
-	return out, err
+	return out, nil
 }

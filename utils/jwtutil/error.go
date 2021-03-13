@@ -1,6 +1,6 @@
 package jwtutil
 
-import "github.com/phungvandat/source-template/utils/errs"
+import "github.com/phungvandat/source-template/pkg/errs"
 
 // jwtutil error
 var (

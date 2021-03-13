@@ -3,8 +3,8 @@ package authen
 import (
 	"github.com/go-redis/redis/v8"
 	"github.com/phungvandat/source-template/model/domain"
+	"github.com/phungvandat/source-template/pkg/errs"
 	dbRedis "github.com/phungvandat/source-template/utils/config/db/redis"
-	"github.com/phungvandat/source-template/utils/errs"
 )
 
 // UseCase interface

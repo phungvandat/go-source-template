@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	iom "github.com/phungvandat/source-template/model/service/user"
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/usecase"
-	"github.com/phungvandat/source-template/utils/errs"
 	"gorm.io/gorm"
 )
 

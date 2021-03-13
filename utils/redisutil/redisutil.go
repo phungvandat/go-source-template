@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/phungvandat/source-template/utils/errs"
+	"github.com/phungvandat/source-template/pkg/errs"
 )
 
 // SetRedisKeys with multi keys

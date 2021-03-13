@@ -1,6 +1,6 @@
 package user
 
-import "github.com/phungvandat/source-template/utils/errs"
+import "github.com/phungvandat/source-template/pkg/errs"
 
 type mwValid struct {
 	Service

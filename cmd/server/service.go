@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/service"
 	"github.com/phungvandat/source-template/service/user"
 	"github.com/phungvandat/source-template/usecase"
-	"github.com/phungvandat/source-template/utils/errs"
 )
 
 func initService(

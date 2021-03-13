@@ -6,7 +6,7 @@ import (
 
 	"github.com/phungvandat/source-template/model/domain"
 	iom "github.com/phungvandat/source-template/model/service/user"
-	"github.com/phungvandat/source-template/utils/errs"
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/utils/helper"
 	"gorm.io/gorm"
 

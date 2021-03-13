@@ -5,8 +5,8 @@ import (
 
 	iom "github.com/phungvandat/source-template/model/service/user"
 	"github.com/phungvandat/source-template/pkg/endpoint"
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/service/user"
-	"github.com/phungvandat/source-template/utils/errs"
 )
 
 func makeLoginEndpoint(s user.Service) endpoint.Endpoint {

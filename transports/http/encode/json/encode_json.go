@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/phungvandat/source-template/model/domain"
+	"github.com/phungvandat/source-template/pkg/errs"
 	"github.com/phungvandat/source-template/utils/ctxkey"
-	"github.com/phungvandat/source-template/utils/errs"
 )
 
 // swagger:model ErrorResponse
@@ -18,24 +18,23 @@ type errRes struct {
 	Code int `json:"code"`
 }
 
-type StatusCoder interface {
-	HTTPStatusCode() int
-}
-
 func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interface{}, err error) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	httpCode := http.StatusOK
 
-	if sc, ok := res.(StatusCoder); ok {
-		httpCode = sc.HTTPStatusCode()
-	}
 	if err != nil {
+		httpCode = http.StatusInternalServerError
 		var (
 			errCode    int
 			errMessage = err.Error()
 		)
 		cErr, ok := err.(errs.CustomErrorer)
 		if ok {
+			var errStatusCode = cErr.HTTPStatusCode()
+			if errStatusCode >= 0 {
+				httpCode = errStatusCode
+			}
+
 			errCode = cErr.Code()
 			lang := ctxkey.GetStrValue(ctx, domain.CtxKeyLang)
 			if lang != "" {
@@ -44,7 +43,7 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 		}
 
 		w.WriteHeader(httpCode)
-		// enforce json response
+		// encode json response
 		json.NewEncoder(w).Encode(errRes{
 			Message: errMessage,
 			Code:    errCode,
