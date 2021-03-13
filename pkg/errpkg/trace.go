@@ -40,6 +40,14 @@ func (et *errTrace) Trace(err error) error {
 
 	if !ok {
 		tErr = NewCustomErrByMsg(err.Error(), Option{HTTPCode: http.StatusInternalServerError})
+	} else {
+		tErr = &customErr{
+			httpStatuscode: tErr.HTTPCode(),
+			code:           tErr.Code(),
+			key:            tErr.Key(),
+			message:        tErr.Error(),
+			isTraced:       tErr.IsTraced(),
+		}
 	}
 
 	if !tErr.IsTraced() {

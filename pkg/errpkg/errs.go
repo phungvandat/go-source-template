@@ -8,6 +8,7 @@ type CustomErrorer interface {
 	IsTraced() bool
 	SetTraced(val bool)
 	Code() int
+	Key() string
 }
 
 // customErr struct
@@ -60,6 +61,10 @@ func (ce *customErr) SetTraced(val bool) {
 
 func (ce customErr) Code() int {
 	return ce.code
+}
+
+func (ce customErr) Key() string {
+	return ce.key
 }
 
 // NewCustomErrByMsg in constructor of CustomErr
