@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/phungvandat/source-template/pkg/errs"
+	"github.com/phungvandat/source-template/pkg/errpkg"
 	"github.com/phungvandat/source-template/service"
 	"github.com/phungvandat/source-template/service/user"
 	"github.com/phungvandat/source-template/usecase"
 )
 
 func initService(
-	eTracer errs.ErrTracer,
+	eTracer errpkg.ErrTracer,
 ) service.Service {
 	var (
 		userSvc, _ = service.Compose(

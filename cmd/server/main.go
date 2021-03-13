@@ -10,7 +10,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/phungvandat/source-template/endpoints"
-	"github.com/phungvandat/source-template/pkg/errs"
+	"github.com/phungvandat/source-template/pkg/errpkg"
 	"github.com/phungvandat/source-template/utils/config/env"
 	"github.com/phungvandat/source-template/utils/logger"
 
@@ -44,7 +44,7 @@ func main() {
 		httpPort  = "4000"
 		httpAddr  = fmt.Sprintf(":%v", httpPort)
 		maxErrChn = 100
-		eTracer   = errs.NewErrTracer(maxErrChn)
+		eTracer   = errpkg.NewErrTracer(maxErrChn)
 		errChn    = make(chan error)
 		svc       = initService(eTracer)
 		eps       = endpoints.MakeServerEndpoints(svc)

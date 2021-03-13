@@ -13,6 +13,7 @@ import (
 )
 
 func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error) {
+	return nil, nil
 	var (
 		username = in.Username
 		user     = &domain.User{}

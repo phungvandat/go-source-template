@@ -6,9 +6,9 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/phungvandat/source-template/pkg/errs"
 	fwk "github.com/phungvandat/source-template/pkg/framework/http"
 	"github.com/phungvandat/source-template/transports/http/mws"
+	"github.com/phungvandat/source-template/utils/errs"
 	"github.com/phungvandat/source-template/utils/logger"
 )
 

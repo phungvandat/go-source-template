@@ -1,4 +1,4 @@
-package errs
+package errpkg
 
 import (
 	"fmt"
@@ -39,7 +39,7 @@ func (et *errTrace) Trace(err error) error {
 	)
 
 	if !ok {
-		tErr = NewCustomErrByMsg(err.Error(), Option{HTTPStatusCode: http.StatusInternalServerError})
+		tErr = NewCustomErrByMsg(err.Error(), Option{HTTPCode: http.StatusInternalServerError})
 	}
 
 	if !tErr.IsTraced() {

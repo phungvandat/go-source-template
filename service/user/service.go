@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	iom "github.com/phungvandat/source-template/model/service/user"
-	"github.com/phungvandat/source-template/pkg/errs"
+	"github.com/phungvandat/source-template/pkg/errpkg"
 	"github.com/phungvandat/source-template/usecase"
 	"gorm.io/gorm"
 )
@@ -17,13 +17,13 @@ type Service interface {
 
 type svc struct {
 	uc      usecase.Usecase
-	eTracer errs.ErrTracer
+	eTracer errpkg.ErrTracer
 	pg      *gorm.DB
 	rd      *redis.Client
 }
 
 // NewService is constructor of user service
-func NewService(pg *gorm.DB, rd *redis.Client, eTracer errs.ErrTracer, uc usecase.Usecase) Service {
+func NewService(pg *gorm.DB, rd *redis.Client, eTracer errpkg.ErrTracer, uc usecase.Usecase) Service {
 	return &svc{
 		pg:      pg,
 		uc:      uc,

@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/phungvandat/source-template/model/domain"
-	"github.com/phungvandat/source-template/pkg/errs"
+	"github.com/phungvandat/source-template/pkg/errpkg"
 	"github.com/phungvandat/source-template/utils/ctxkey"
 )
 
@@ -15,7 +15,9 @@ type errRes struct {
 	// Message of error
 	Message string `json:"message"`
 	// Code of error
-	Code int `json:"code"`
+	Code int `json:"code,omitempty"`
+	// Type of error
+	Type string `json:"type,omitempty"`
 }
 
 func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interface{}, err error) error {
@@ -28,25 +30,27 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 			errCode    int
 			errMessage = err.Error()
 		)
-		cErr, ok := err.(errs.CustomErrorer)
+		cErr, ok := err.(errpkg.CustomErrorer)
 		if ok {
-			var errStatusCode = cErr.HTTPStatusCode()
-			if errStatusCode >= 0 {
+			var errStatusCode = cErr.HTTPCode()
+			if errStatusCode > 0 {
 				httpCode = errStatusCode
 			}
 
 			errCode = cErr.Code()
 			lang := ctxkey.GetStrValue(ctx, domain.CtxKeyLang)
 			if lang != "" {
-				errMessage = cErr.GetMessageByLang(errs.ErrLang(lang))
+				errMessage = cErr.GetMessageByLang(errpkg.Lang(lang))
 			}
 		}
 
 		w.WriteHeader(httpCode)
 		// encode json response
-		json.NewEncoder(w).Encode(errRes{
-			Message: errMessage,
-			Code:    errCode,
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error": errRes{
+				Message: errMessage,
+				Code:    errCode,
+			},
 		})
 		return nil
 	}

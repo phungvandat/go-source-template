@@ -2,7 +2,7 @@ package user
 
 // LoginSvcIn define input data for login handle
 type LoginSvcIn struct {
-	Username string `json:"user_name"`
+	Username string `json:"username"`
 }
 
 // LoginSvcOut define output data for login handle

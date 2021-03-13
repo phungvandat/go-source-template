@@ -4,6 +4,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/phungvandat/source-template/utils/errs"
 )
 
 // TokenInfo holds data to create jwt token
@@ -39,7 +40,7 @@ func (ti TokenInfo) convertToJWTClaims() jwt.MapClaims {
 func VerifyToken(tokenStr string, secret []byte) (map[string]interface{}, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, ErrUnexpectedTokenSigningMethod
+			return nil, errs.ErrTokenUnexpectedSigningMethod
 		}
 
 		return secret, nil
@@ -51,7 +52,7 @@ func VerifyToken(tokenStr string, secret []byte) (map[string]interface{}, error)
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, ErrTokenInvalid
+		return nil, errs.ErrTokenInvalid
 	}
 
 	return claims, nil
