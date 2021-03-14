@@ -22,7 +22,7 @@ func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, 
 	err = s.pg.Where("username = ?", username).First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, errs.ErrUserNotFound
+			return nil, s.eTracer.Trace(errs.ErrUserNotFound)
 		}
 		return nil, s.eTracer.Trace(err)
 	}
