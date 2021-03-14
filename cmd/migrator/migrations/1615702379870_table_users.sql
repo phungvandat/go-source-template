@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS users (
 
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    deleted_at TIMESTAMP,
 
     CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES companies(id),
     CONSTRAINT uni_username_company_id UNIQUE(username, company_id)

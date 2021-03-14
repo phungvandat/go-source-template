@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS companies (
 
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    deleted_at TIMESTAMP,
 
     CONSTRAINT uni_domain UNIQUE(domain)
 );
