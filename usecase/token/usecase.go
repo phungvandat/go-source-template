@@ -1,13 +1,15 @@
 package token
 
 import (
+	"context"
+
 	"github.com/phungvandat/source-template/model/domain"
 	"github.com/phungvandat/source-template/pkg/errpkg"
 )
 
 // UseCase interface
 type UseCase interface {
-	CreateToken(userID domain.ID) (*createTokenRes, error)
+	CreateToken(ctx context.Context, userID domain.ID) (accessToken, refreshToken string, err error)
 	private()
 }
 

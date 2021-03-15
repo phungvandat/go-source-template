@@ -2,14 +2,12 @@ package user
 
 import (
 	"context"
-	"time"
 
 	"github.com/phungvandat/source-template/model/domain"
 	iom "github.com/phungvandat/source-template/model/service/user"
 	"gorm.io/gorm"
 
 	"github.com/phungvandat/source-template/utils/errs"
-	"github.com/phungvandat/source-template/utils/redisutil"
 )
 
 func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error) {
@@ -28,32 +26,13 @@ func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, 
 	}
 
 	// TODO: compare with password
-	ctRes, err := s.uc.Token.CreateToken(user.ID)
-	if err != nil {
-		return nil, s.eTracer.Trace(err)
-	}
-
-	err = s.setSessionIDToRedis(ctx, ctRes.AccessSessionID, ctRes.RefreshSessionID)
+	accessToken, refreshToken, err := s.uc.Token.CreateToken(ctx, user.ID)
 	if err != nil {
 		return nil, s.eTracer.Trace(err)
 	}
 
 	return &iom.LoginSvcOut{
-		AccessToken:  ctRes.AccessToken,
-		RefreshToken: ctRes.RefreshToken,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}, nil
-}
-
-func (s *svc) setSessionIDToRedis(ctx context.Context, accessTokenID, refreshTokenID string) error {
-	err := redisutil.SetWithKey(ctx, s.rd, domain.UserAccessSessionID, accessTokenID, 12*time.Hour)
-	if err != nil {
-		return s.eTracer.Trace(err)
-	}
-
-	err = redisutil.SetWithKey(ctx, s.rd, domain.UserRefreshSessionID, refreshTokenID, 7*24*time.Hour)
-	if err != nil {
-		return s.eTracer.Trace(err)
-	}
-
-	return nil
 }
