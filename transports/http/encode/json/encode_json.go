@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/phungvandat/source-template/model/domain"
 	"github.com/phungvandat/source-template/pkg/errpkg"
 	"github.com/phungvandat/source-template/utils/ctxkey"
 )
@@ -38,7 +37,7 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 			}
 
 			errCode = cErr.Code()
-			lang := ctxkey.GetStrValue(ctx, domain.CtxKeyLang)
+			lang := ctxkey.GetLang(ctx)
 			if lang != "" {
 				errMessage = cErr.GetMessageByLang(errpkg.Lang(lang))
 			}
