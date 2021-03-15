@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-    db:
+    db_pg:
         image: postgres:13.2
         container_name: db-postgres
         restart: always
@@ -10,7 +10,7 @@ services:
             POSTGRES_PASSWORD: pass_demo
             POSTGRES_DB: db_demo
 
-    db-test:
+    db_pg_test:
         image: postgres:13.2
         container_name: db-postgres-test
         restart: always
@@ -20,7 +20,7 @@ services:
           POSTGRES_PASSWORD: pass_demo_test
           POSTGRES_DB: db_demo_test
 
-    backend_redis_test:
+    db_redis:
         image: redis:alpine
         container_name: db-redis
         restart: always
