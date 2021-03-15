@@ -15,7 +15,7 @@ services:
         container_name: db-postgres-test
         restart: always
         ports:
-          - 5439:5432
+          - 5433:5432
         environment:
           POSTGRES_PASSWORD: pass_demo_test
           POSTGRES_DB: db_demo_test
@@ -26,4 +26,12 @@ services:
         restart: always
         ports:
             - "6379:6379"
+        command: redis-server --requirepass password
+
+    db_redis_test:
+        image: redis:alpine
+        container_name: db-redis-test
+        restart: always
+        ports:
+            - "6378:6379"
         command: redis-server --requirepass password

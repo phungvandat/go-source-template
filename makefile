@@ -1,5 +1,6 @@
 init-env: 
 	@cat .env.example > .env
+	@cat cmd/migrator/.env.migrator.example > cmd/migrator/.env.migrator
 
 db-up:
 	@docker-compose -f docker-compose-local.yml up -d

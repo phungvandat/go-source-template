@@ -18,15 +18,7 @@ var (
 // InitRedisConn create a redis connection
 func InitRedisConn(connStr string) {
 	once.Do(func() {
-		var (
-			addr    = helper.GetStringInBetween(connStr, "addr=", " ")
-			pass    = helper.GetStringInBetween(connStr, "pass=", " ")
-			dbStr   = helper.GetStringInBetween(connStr, "db=", " ")
-			db, err = strconv.Atoi(dbStr)
-		)
-		if err != nil {
-			panic(err)
-		}
+		addr, pass, db := parseRedisConfig(connStr)
 
 		redisDB = redis.NewClient(&redis.Options{
 			Addr:     addr,
@@ -38,6 +30,19 @@ func InitRedisConn(connStr string) {
 		}
 		logger.Info("redis db connected")
 	})
+}
+
+func parseRedisConfig(connStr string) (addr, pass string, db int) {
+	addr = helper.GetStringInBetween(connStr, "addr=", " ")
+	pass = helper.GetStringInBetween(connStr, "pass=", " ")
+	dbStr := helper.GetStringInBetween(connStr, "db=", " ")
+	db, err := strconv.Atoi(dbStr)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return addr, pass, db
 }
 
 // GetDB return a db connection
