@@ -12,6 +12,15 @@ func UserRoutes(
 	endpoints endpoints.Endpoints,
 ) func(r fwk.Router) {
 	return func(r fwk.Router) {
+		// swagger:route POST /users/login User Login
+		// User login.
+		// parameters:
+		// + name: body
+		//   in: body
+		//	 type: UserLoginHTTPReq
+		// responses:
+		//	default: body:ErrorResponse
+		// 	200: body:UserLoginHTTPRes
 		r.POST("/login", fwk.NewHandle(
 			jsonDec.LoginRequest,
 			endpoints.User.Login,

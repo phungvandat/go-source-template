@@ -17,3 +17,11 @@ dev: migrate-db-up
 migrate-db-up:
 	@cd cmd/migrator;\
 	go run *.go
+
+gen-docs: 
+	swagger generate spec -m -o ./docs/api.yaml
+	cp /dev/null "./docs/swagger.yaml"
+	awk '{print}' "./docs/model.yaml" "./docs/api.yaml" >> "./docs/swagger.yaml"
+
+docs-ui: 
+	swagger serve ./docs/swagger.yaml

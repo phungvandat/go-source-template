@@ -7,7 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// ID implement for uuid
+// ID of domain implement for uuid
 type ID [16]byte
 
 // NewID create new UUID with v4

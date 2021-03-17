@@ -1,3 +1,28 @@
+// Package classification Demo API.
+// Terms Of Service:
+//
+//     Schemes: https
+//     Host: api.demo
+//     Base path: /api/internal/v1
+//     Version: 1.0.0
+//     Contact: Demo Engineer<engineering@demo>
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+//     Security:
+//     - Authorization:
+//
+//     SecurityDefinitions:
+//     Authorization:
+//          type: apiKey
+//          name: Authorization
+//          in: header
+//
+// swagger:meta
 package http
 
 import (

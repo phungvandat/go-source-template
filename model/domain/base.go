@@ -6,7 +6,9 @@ import (
 
 // Base struct contain common fields for all domain struct
 type Base struct {
-	ID        ID         `json:"id"`
-	CreatedAt time.Time  `json:"created_at" gorm:"->"`
+	ID ID `json:"id"`
+	// Created time
+	CreatedAt time.Time `json:"created_at" gorm:"->"`
+	// Updated time
 	UpdatedAt *time.Time `json:"updated_at" gorm:"->"`
 }

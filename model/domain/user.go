@@ -1,13 +1,16 @@
 package domain
 
+// swagger:model UserDomain
 // User holds information's user
 type User struct {
 	Base
 	CompanyID ID `json:"company_id"`
-
-	Fullname string   `json:"fullname"`
-	Username string   `json:"username"`
-	Password string   `json:"-"`
+	// Fullname user's
+	Fullname string `json:"fullname"`
+	// Username user's
+	Username string `json:"username"`
+	Password string `json:"-"`
+	// Role type user's
 	RoleType RoleType `json:"role_type"`
 }
 

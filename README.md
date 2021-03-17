@@ -10,3 +10,8 @@ make init-dev
 ```shell
 make dev
 ```
+
+# How to gen docs
+- Install go swagger: `go get -u github.com/go-swagger/go-swagger/cmd/swagger`
+- Gen docs: `make gen-docs`
+- View UI: `make docs-ui`
