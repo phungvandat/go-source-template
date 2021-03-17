@@ -10,7 +10,7 @@ import (
 	"github.com/phungvandat/source-template/utils/errs"
 )
 
-func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error) {
+func (s *svc) Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, error) {
 	var (
 		username = in.Username
 		user     = &domain.User{}
@@ -31,7 +31,7 @@ func (s *svc) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, 
 		return nil, s.eTracer.Trace(err)
 	}
 
-	return &iom.LoginSvcOut{
+	return &iom.LoginOut{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

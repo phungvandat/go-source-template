@@ -10,6 +10,6 @@ import (
 
 func makeLoginEndpoint(s user.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		return s.Login(ctx, request.(*iom.LoginSvcIn))
+		return s.Login(ctx, request.(*iom.LoginIn))
 	}
 }

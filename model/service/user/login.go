@@ -1,12 +1,12 @@
 package user
 
-// LoginSvcIn define input data for login handle
-type LoginSvcIn struct {
+// LoginIn define input data for login handle
+type LoginIn struct {
 	Username string `json:"username"`
 }
 
-// LoginSvcOut define output data for login handle
-type LoginSvcOut struct {
+// LoginOut define output data for login handle
+type LoginOut struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }

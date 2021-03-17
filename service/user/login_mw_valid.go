@@ -7,7 +7,7 @@ import (
 	"github.com/phungvandat/source-template/utils/errs"
 )
 
-func (mw mwValid) Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error) {
+func (mw mwValid) Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, error) {
 	if in.Username == "" {
 		return nil, mw.eTracer.Trace(errs.ErrUsernameRequired)
 	}

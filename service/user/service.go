@@ -12,7 +12,7 @@ import (
 
 // Service is user service
 type Service interface {
-	Login(ctx context.Context, in *iom.LoginSvcIn) (*iom.LoginSvcOut, error)
+	Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, error)
 }
 
 type svc struct {

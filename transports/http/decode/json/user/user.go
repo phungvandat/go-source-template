@@ -11,5 +11,5 @@ import (
 
 // LoginRequest decode json data
 func LoginRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	return httputil.DecodeJSON(r, &iom.LoginSvcIn{})
+	return httputil.DecodeJSON(r, &iom.LoginIn{})
 }
