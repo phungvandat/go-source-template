@@ -1,14 +1,25 @@
 package errpkg
 
+import (
+	"math/rand"
+	"time"
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_1234567890")
+
 // CustomErrorer interface
 type CustomErrorer interface {
 	Error() string
 	HTTPCode() int
 	GetMessageByLang(lang Lang) string
-	IsTraced() bool
-	SetTraced(val bool)
 	Code() int
 	Key() string
+	TraceID() string
+	SetTraceID()
 }
 
 // customErr struct
@@ -21,8 +32,8 @@ type customErr struct {
 	key string
 	// Message of error
 	message string
-	// Is error traced?
-	isTraced bool
+	// trace id of error
+	traceID string
 }
 
 // Error return error message
@@ -50,13 +61,17 @@ func (ce customErr) GetMessageByLang(lang Lang) string {
 	return mess
 }
 
-// IsTraced check error traced
-func (ce customErr) IsTraced() bool {
-	return ce.isTraced
+// TraceID get id of trace error
+func (ce customErr) TraceID() string {
+	return ce.traceID
 }
 
-func (ce *customErr) SetTraced(val bool) {
-	ce.isTraced = val
+func (ce *customErr) SetTraceID() {
+	val := make([]rune, 23)
+	for i := range val {
+		val[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	ce.traceID = string(val)
 }
 
 func (ce customErr) Code() int {
@@ -76,7 +91,6 @@ func NewCustomErrByMsg(msg string, optArr ...Option) CustomErrorer {
 		key:            opt.Key,
 		code:           opt.Code,
 		httpStatuscode: opt.HTTPCode,
-		isTraced:       opt.IsTraced,
 	}
 }
 
@@ -89,7 +103,6 @@ func NewCustomErrByKey(key string, optArr ...Option) CustomErrorer {
 		key:            key,
 		message:        getMessageFromKey(key),
 		httpStatuscode: opt.HTTPCode,
-		isTraced:       opt.IsTraced,
 	}
 }
 

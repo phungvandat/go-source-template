@@ -6,6 +6,7 @@ import (
 
 	"github.com/phungvandat/source-template/model/domain"
 	"github.com/phungvandat/source-template/utils/ctxkey"
+	"github.com/phungvandat/source-template/utils/errs"
 	"github.com/phungvandat/source-template/utils/jwtutil"
 	"github.com/phungvandat/source-template/utils/redisutil"
 	uuid "github.com/satori/go.uuid"
@@ -52,17 +53,17 @@ func (uc *token) CreateToken(ctx context.Context, userID domain.ID) (accessToken
 
 	accessToken, err = jwtutil.CreateToken(atGenData)
 	if err != nil {
-		return "", "", uc.eTracer.Trace(err)
+		return "", "", uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	refreshToken, err = jwtutil.CreateToken(rfGenData)
 	if err != nil {
-		return "", "", uc.eTracer.Trace(err)
+		return "", "", uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	err = uc.setSessionIDToRedis(ctx, atSessionID, rfSessionID)
 	if err != nil {
-		return "", "", uc.eTracer.Trace(err)
+		return "", "", uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	return accessToken, refreshToken, nil
@@ -71,17 +72,17 @@ func (uc *token) CreateToken(ctx context.Context, userID domain.ID) (accessToken
 func (uc *token) setSessionIDToRedis(ctx context.Context, accessTokenID, refreshTokenID string) error {
 	rClient, err := ctxkey.GetRedis(ctx)
 	if err != nil {
-		return uc.eTracer.Trace(err)
+		return uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	err = redisutil.SetWithKey(ctx, rClient, domain.UserAccessSessionID, accessTokenID, 12*time.Hour)
 	if err != nil {
-		return uc.eTracer.Trace(err)
+		return uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	err = redisutil.SetWithKey(ctx, rClient, domain.UserRefreshSessionID, refreshTokenID, 7*24*time.Hour)
 	if err != nil {
-		return uc.eTracer.Trace(err)
+		return uc.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
 	return nil

@@ -17,6 +17,8 @@ type errRes struct {
 	Code int `json:"code,omitempty"`
 	// Type of error
 	Type string `json:"type,omitempty"`
+	// ID of trace error
+	TraceID string `json:"trace_id,omitempty"`
 }
 
 func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interface{}, err error) error {
@@ -26,8 +28,9 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 	if err != nil {
 		httpCode = http.StatusInternalServerError
 		var (
-			errCode    int
-			errMessage = err.Error()
+			errCode        int
+			errMessage     = err.Error()
+			type_, traceID string
 		)
 		cErr, ok := err.(errpkg.CustomErrorer)
 		if ok {
@@ -41,6 +44,9 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 			if lang != "" {
 				errMessage = cErr.GetMessageByLang(errpkg.Lang(lang))
 			}
+
+			traceID = cErr.TraceID()
+			type_ = cErr.Key()
 		}
 
 		w.WriteHeader(httpCode)
@@ -49,6 +55,8 @@ func EncodeJSONResponse(ctx context.Context, w http.ResponseWriter, res interfac
 			"error": errRes{
 				Message: errMessage,
 				Code:    errCode,
+				Type:    type_,
+				TraceID: traceID,
 			},
 		})
 		return nil

@@ -34,3 +34,8 @@ func Warning(format string, args ...interface{}) {
 func Panic(format string, args ...interface{}) {
 	log.Panicf(format, args...)
 }
+
+// Trace logs a message at level Trace on the standard logger.
+func Trace(format string, args ...interface{}) {
+	log.Warnf(format, args...)
+}

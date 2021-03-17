@@ -10,7 +10,7 @@ import (
 
 // ErrTracer to trace error and centralize error
 type ErrTracer interface {
-	Trace(err error) error
+	Trace(err error, logErrs ...error) error
 	GotErr() <-chan error
 	Close()
 	private()
@@ -33,36 +33,34 @@ func (et *errTrace) private() {
 	// Anti tampering
 }
 
-func (et *errTrace) Trace(err error) error {
+func (et *errTrace) Trace(err error, logErrs ...error) error {
 	var (
-		bufNum   = 5
+		bufNum   = 3
 		traceMsg = getStackTrace(bufNum)
 		tErr, ok = err.(CustomErrorer)
 	)
 
 	if !ok {
 		tErr = NewCustomErrByMsg(err.Error(), Option{HTTPCode: http.StatusInternalServerError})
-	} else {
-		tErr = &customErr{
-			httpStatuscode: tErr.HTTPCode(),
-			code:           tErr.Code(),
-			key:            tErr.Key(),
-			message:        tErr.Error(),
-			isTraced:       tErr.IsTraced(),
-		}
 	}
 
-	if !tErr.IsTraced() {
-		go helper.Goroutine(func(err error) {
+	if tErr.TraceID() == "" {
+		tErr.SetTraceID()
+		go helper.Goroutine(func() {
 			if et.errChn == nil {
 				return
 			}
-			nErr := fmt.Errorf("%v \nTrace: %v", err.Error(), traceMsg)
+			logErrMsg := ""
+			for idx := range logErrs {
+				if logErrs[idx] != nil {
+					logErrMsg += fmt.Sprintf("\nsecondary error: %v", logErrs[idx].Error())
+				}
+			}
+			nErr := fmt.Errorf("%v \ntrace_id: %v%v%v", tErr, tErr.TraceID(), traceMsg, logErrMsg)
 			et.errChn <- nErr
-		}, tErr)
+		})
 	}
 
-	tErr.SetTraced(true)
 	return tErr
 }
 
@@ -87,7 +85,7 @@ func getStackTrace(bufNum int) string {
 
 	for {
 		frame, more := frames.Next()
-		trace += fmt.Sprintf("\n\tFile: %s, Function: %s, Line: %d. ", frame.File, frame.Function, frame.Line)
+		trace += fmt.Sprintf("\n%s:%d, Function: %s. ", frame.File, frame.Line, frame.Function)
 		if !more {
 			break
 		}

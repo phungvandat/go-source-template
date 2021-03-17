@@ -73,7 +73,7 @@ func main() {
 				if err == nil {
 					continue
 				}
-				logger.Error(err.Error())
+				logger.Trace(err.Error())
 			}
 		}
 	})

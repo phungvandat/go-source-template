@@ -7,12 +7,15 @@ import (
 	iom "github.com/phungvandat/source-template/model/service/user"
 	"gorm.io/gorm"
 
+	cryptopgk "github.com/phungvandat/source-template/pkg/crypto"
+	"github.com/phungvandat/source-template/utils/ctxkey"
 	"github.com/phungvandat/source-template/utils/errs"
 )
 
 func (s *svc) Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, error) {
 	var (
 		username = in.Username
+		pass     = in.Password
 		user     = &domain.User{}
 		err      error
 	)
@@ -22,11 +25,15 @@ func (s *svc) Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, error)
 		if err == gorm.ErrRecordNotFound {
 			return nil, s.eTracer.Trace(errs.ErrUserNotFound)
 		}
-		return nil, s.eTracer.Trace(err)
+		return nil, s.eTracer.Trace(errs.ErrSomethingWentWrong, err)
 	}
 
-	// TODO: compare with password
-	accessToken, refreshToken, err := s.uc.Token.CreateToken(ctx, user.ID)
+	passMatched, err := cryptopgk.CompareValue(pass, user.Password)
+	if !passMatched || err != nil {
+		return nil, s.eTracer.Trace(errs.ErrWrongPass, err)
+	}
+
+	accessToken, refreshToken, err := s.uc.Token.CreateToken(ctxkey.SetRedis(ctx, s.rd), user.ID)
 	if err != nil {
 		return nil, s.eTracer.Trace(err)
 	}

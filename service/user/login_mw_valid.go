@@ -12,5 +12,9 @@ func (mw mwValid) Login(ctx context.Context, in *iom.LoginIn) (*iom.LoginOut, er
 		return nil, mw.eTracer.Trace(errs.ErrUsernameRequired)
 	}
 
+	if in.Password == "" {
+		return nil, mw.eTracer.Trace(errs.ErrPassRequired)
+	}
+
 	return mw.Service.Login(ctx, in)
 }

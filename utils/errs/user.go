@@ -16,4 +16,12 @@ var (
 		"user.not_found",
 		errpkg.OptHTTPCode(http.StatusNotFound),
 	)
+	ErrWrongPass = errpkg.NewCustomErrByKey(
+		"login.wrong_pass",
+		errpkg.OptHTTPCode(http.StatusBadRequest),
+	)
+	ErrPassRequired = errpkg.NewCustomErrByKey(
+		"login.pass_required",
+		errpkg.OptHTTPCode(http.StatusBadRequest),
+	)
 )
