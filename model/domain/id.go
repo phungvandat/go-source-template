@@ -3,8 +3,6 @@ package domain
 import (
 	"database/sql/driver"
 	"errors"
-	"fmt"
-	"reflect"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -74,21 +72,6 @@ func (u *ID) Scan(b interface{}) error {
 		}
 		return nil
 	}
-
-	fmt.Println(reflect.TypeOf(b).Kind())
-	// bByte, ok := b.([]interface{})
-	// if !ok {
-	// 	for i := range u {
-	// 		u[i] = 0
-	// 	}
-	// 	return nil
-	// }
-
-	// // postgres store DB as a string
-	// id, err := uuid.FromString(string(bByte))
-	// if err != nil {
-	// 	return err
-	// }
 
 	// postgres store DB as a string
 	id, err := uuid.FromString(string(b.([]byte)))
