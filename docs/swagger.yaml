@@ -1,0 +1,152 @@
+tags:
+  - name: user_domain
+    x-displayName: User domain
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/UserDomain" />
+basePath: /api/internal/v1
+consumes:
+- application/json
+definitions:
+  Base:
+    description: Base struct contain common fields for all domain struct
+    properties:
+      created_at:
+        description: Created time
+        format: date-time
+        type: string
+        x-go-name: CreatedAt
+      id:
+        $ref: '#/definitions/ID'
+      updated_at:
+        description: Updated time
+        format: date-time
+        type: string
+        x-go-name: UpdatedAt
+    type: object
+    x-go-package: github.com/phungvandat/source-template/model/domain
+  ErrorResponse:
+    properties:
+      code:
+        description: Code of error
+        format: int64
+        type: integer
+        x-go-name: Code
+      message:
+        description: Message of error
+        type: string
+        x-go-name: Message
+      trace_id:
+        description: ID of trace error
+        type: string
+        x-go-name: TraceID
+      type:
+        description: Type of error
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-name: errRes
+    x-go-package: github.com/phungvandat/source-template/transports/http/encode/json
+  ID:
+    description: ID of domain implement for uuid
+    items:
+      format: uint8
+      type: integer
+    type: array
+    x-go-package: github.com/phungvandat/source-template/model/domain
+  RoleType:
+    format: int64
+    type: integer
+    x-go-package: github.com/phungvandat/source-template/model/domain
+  UserDomain:
+    properties:
+      company_id:
+        $ref: '#/definitions/ID'
+      created_at:
+        description: Created time
+        format: date-time
+        type: string
+        x-go-name: CreatedAt
+      fullname:
+        description: Fullname user's
+        type: string
+        x-go-name: Fullname
+      id:
+        $ref: '#/definitions/ID'
+      role_type:
+        $ref: '#/definitions/RoleType'
+      updated_at:
+        description: Updated time
+        format: date-time
+        type: string
+        x-go-name: UpdatedAt
+      username:
+        description: Username user's
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-name: User
+    x-go-package: github.com/phungvandat/source-template/model/domain
+  UserLoginHTTPReq:
+    properties:
+      password:
+        type: string
+        x-go-name: Password
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-name: LoginIn
+    x-go-package: github.com/phungvandat/source-template/model/service/user
+  UserLoginHTTPRes:
+    properties:
+      access_token:
+        type: string
+        x-go-name: AccessToken
+      refresh_token:
+        type: string
+        x-go-name: RefreshToken
+    type: object
+    x-go-name: LoginOut
+    x-go-package: github.com/phungvandat/source-template/model/service/user
+host: api.demo
+info:
+  contact:
+    email: engineering@demo
+    name: Demo Engineer
+  title: Demo API.
+  version: 1.0.0
+paths:
+  /users/login:
+    post:
+      operationId: Login
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: '#/definitions/UserLoginHTTPReq'
+          type: object
+        type: object
+      responses:
+        "200":
+          description: UserLoginHTTPRes
+          schema:
+            $ref: '#/definitions/UserLoginHTTPRes'
+        default:
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: User login.
+      tags:
+      - User
+produces:
+- application/json
+schemes:
+- https
+security:
+- Authorization: []
+securityDefinitions:
+  Authorization:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

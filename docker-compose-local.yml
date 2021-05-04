@@ -1,20 +1,37 @@
 version: '3.7'
 services:
-    db:
+    db_pg:
         image: postgres:13.2
+        container_name: db-postgres
         restart: always
         ports:
             - 5432:5432
         environment:
             POSTGRES_PASSWORD: pass_demo
             POSTGRES_DB: db_demo
-        container_name: db-postgres
 
-    db-test:
+    db_pg_test:
         image: postgres:13.2
+        container_name: db-postgres-test
         restart: always
+        ports:
+          - 5433:5432
         environment:
           POSTGRES_PASSWORD: pass_demo_test
           POSTGRES_DB: db_demo_test
+
+    db_redis:
+        image: redis:alpine
+        container_name: db-redis
+        restart: always
         ports:
-          - 5439:5432
+            - "6379:6379"
+        command: redis-server --requirepass password
+
+    db_redis_test:
+        image: redis:alpine
+        container_name: db-redis-test
+        restart: always
+        ports:
+            - "6378:6379"
+        command: redis-server --requirepass password

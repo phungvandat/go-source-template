@@ -7,7 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// ID implement for uuid
+// ID of domain implement for uuid
 type ID [16]byte
 
 // NewID create new UUID with v4
@@ -73,16 +73,8 @@ func (u *ID) Scan(b interface{}) error {
 		return nil
 	}
 
-	bByte, ok := b.([]byte)
-	if !ok {
-		for i := range u {
-			u[i] = 0
-		}
-		return nil
-	}
-
 	// postgres store DB as a string
-	id, err := uuid.FromString(string(bByte))
+	id, err := uuid.FromString(string(b.([]byte)))
 	if err != nil {
 		return err
 	}

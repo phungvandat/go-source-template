@@ -1,39 +1,35 @@
 package errs
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/phungvandat/source-template/pkg/errpkg"
 )
 
 // Common errors
 var (
-	ErrMethodNotAllowed = func(methodName string) CustomErr {
-		return NewCustomErr(
-			fmt.Sprintf("Just accept %v method.", methodName),
-			http.StatusMethodNotAllowed,
-		)
-	}
-	ErrSomethingWentWrong = func(err error) CustomErr {
-		return NewCustomErr("Something went wrong", http.StatusInternalServerError)
-	}
-	ErrRequired = func(field string) CustomErr {
-		return NewCustomErr(
-			fmt.Sprintf("%v is required", field),
-			http.StatusBadRequest,
-		)
-	}
-	ErrInvalidType = func(field string) CustomErr {
-		return NewCustomErr(
-			fmt.Sprintf("%v is invalid type", field),
-			http.StatusBadRequest,
-		)
-	}
-	ErrNotFound = func(field string) CustomErr {
-		return NewCustomErr(
-			fmt.Sprintf("%v not found", field),
-			http.StatusNotFound,
-		)
-	}
-	ErrBodyNotAllowed   = NewCustomErr("Body not allowed", http.StatusBadRequest)
-	ErrPermissionDenied = NewCustomErr("Permission denied", http.StatusForbidden)
+	ErrMethodNotAllowed = errpkg.NewCustomErrByMsg(
+		"method not allowed",
+		errpkg.OptHTTPCode(http.StatusMethodNotAllowed),
+	)
+	ErrSomethingWentWrong = errpkg.NewCustomErrByMsg(
+		"something went wrong",
+		errpkg.OptHTTPCode(http.StatusInternalServerError),
+	)
+	ErrNotFound = errpkg.NewCustomErrByMsg(
+		"not found",
+		errpkg.OptHTTPCode(http.StatusNotFound),
+	)
+	ErrBodyNotAllowed = errpkg.NewCustomErrByKey(
+		"data.body_not_allowed",
+		errpkg.OptHTTPCode(http.StatusNotAcceptable),
+	)
+	ErrPermissionDenied = errpkg.NewCustomErrByMsg(
+		"permission denied",
+		errpkg.OptHTTPCode(http.StatusForbidden),
+	)
+	ErrRouteNotFound = errpkg.NewCustomErrByMsg(
+		"route not found",
+		errpkg.OptHTTPCode(http.StatusNotFound),
+	)
 )

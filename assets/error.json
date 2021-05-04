@@ -1,0 +1,23 @@
+{
+    "user.not_found": {
+        "en": "User not found"
+    },
+    "login.username_required": {
+        "en": "Username is required"
+    },
+    "token.unexpected_signing_method": {
+        "en": "Token unexpected signing method"
+    },
+    "token.invalid": {
+        "en": "Token invalid"
+    },
+    "data.body_not_allowed": {
+        "en": "Data body not allowed"
+    },
+    "login.wrong_pass": {
+        "en": "Wrong password"
+    },
+    "login.pass_required": {
+        "en": "Password is required"
+    }
+}
